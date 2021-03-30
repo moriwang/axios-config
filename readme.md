@@ -3,7 +3,7 @@
 
 don't use in production, this repo is just for study purpose.
 
-**Define API** 
+**Define Actions for api** 
 
 See [url.js](src/api/url.js).
 
