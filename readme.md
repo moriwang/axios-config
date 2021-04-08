@@ -1,4 +1,8 @@
-
+### CancelToken
+* Cache requests
+* Cancel duplicate requests
+* Error handling
+  
 ### How to use
 
 don't use in production, this repo is just for study purpose.
