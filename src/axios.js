@@ -46,18 +46,25 @@ axios.interceptors.response.use(
     return response
   },
   error => {
-    // Cancel: Duplicate Request
+    // cancellation
     if (!error.config) {
-      console.warn(error.toString())
+      console.warn(error.toString()) // Cancel: Duplicate Request
+      return Promise.reject(error)
     } else {
       requestCache.completeTask(error.config)
+    }
 
-      // Network: Connection timeout or network error
-      if (error.code === 'ECONNABORTED' || error.response.status === 500) {
-        console.warn('Network: Connection timeout or network error')
+    // Error Handling
+    if (!error.response) {
+      console.warn(error.toString()) // Error: timeout out of exceed
+    } else {
+      const response = error.response
+      if (response.status === 500) {
+        console.warn(error.toString()) // Error: connection lost
       }
-
-      // Handle other error
+      if (response.status === 401) {
+        // Handle other error
+      }
     }
     return Promise.reject(error)
   }
