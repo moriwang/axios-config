@@ -42,24 +42,23 @@ axios.interceptors.request.use(
 
 axios.interceptors.response.use(
   response => {
+    requestCache.completeTask(response.config)
     return response
   },
   error => {
     // Cancel: Duplicate Request
     if (!error.config) {
-      console.log(error.toString())
-    }
-
-    // Network: Connection timeout or network error
-    if (
-      error.code === 'ECONNABORTED' ||
-      error.message.indexOf('timeout') !== -1 ||
-      error.name === 'Error'
-    ) {
+      console.warn(error.toString())
+    } else {
       requestCache.completeTask(error.config)
-      console.log('Network: Connection timeout or network error')
-    }
 
+      // Network: Connection timeout or network error
+      if (error.code === 'ECONNABORTED' || error.response.status === 500) {
+        console.warn('Network: Connection timeout or network error')
+      }
+
+      // Handle other error
+    }
     return Promise.reject(error)
   }
 )
