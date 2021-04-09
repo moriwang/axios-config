@@ -46,6 +46,12 @@ axios.interceptors.response.use(
     return response
   },
   error => {
+    // Network lost
+    if (!window.navigator.onLine) {
+      console.warn('Offline, Please check your network!')
+      return Promise.reject(error)
+    }
+
     // cancellation
     if (!error.config) {
       console.warn(error.toString()) // Cancel: Duplicate Request
@@ -60,7 +66,7 @@ axios.interceptors.response.use(
     } else {
       const response = error.response
       if (response.status === 500) {
-        console.warn(error.toString()) // Error: connection lost
+        console.warn(error.toString())
       }
       if (response.status === 401) {
         // Handle other error
